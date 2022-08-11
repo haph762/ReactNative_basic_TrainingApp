@@ -1,2 +1,3 @@
 import Welcome from './Welcome';
-export {Welcome};
+import Login from './Login';
+export {Welcome, Login};
