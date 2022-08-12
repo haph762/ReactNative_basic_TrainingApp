@@ -10,8 +10,24 @@ import {
 } from 'react-native';
 import {images, color, fontSizes, icons, colors} from '../constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {isValidEmail, isValidPassword} from '../utilities/Validations';
 function Login(props) {
   const [keyboardIsShow, setKeyboardIsShow] = useState(false);
+  //sate for validating
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
+  //sate to store email/password
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // disable button login
+  const isValidationOK = () => {
+    return (
+      email.length > 0 &&
+      password.length > 0 &&
+      isValidEmail(email) &&
+      isValidPassword(password)
+    );
+  };
   useEffect(() => {
     // xử lý khi bàn phím hiện lên các button và register now không bị đè lên nhau
     Keyboard.addListener('keyboardDidShow', () => {
@@ -30,7 +46,7 @@ function Login(props) {
       }}>
       <View
         style={{
-          flex: 30,
+          flex: 20,
           flexDirection: 'row',
           justifyContent: 'space-around',
           alignItems: 'center',
@@ -52,13 +68,19 @@ function Login(props) {
       </View>
       <View
         style={{
-          flex: 25,
+          flex: 35,
         }}>
         <View style={{marginHorizontal: 15}}>
           <Text style={{color: colors.primary, fontSize: fontSizes.h6}}>
             Email:{' '}
           </Text>
           <TextInput
+            onChangeText={text => {
+              setErrorEmail(
+                isValidEmail(text) == true ? '' : 'Email not in correct format',
+              );
+              setEmail(text);
+            }}
             style={{
               color: 'black',
             }}
@@ -74,12 +96,24 @@ function Login(props) {
               marginHorizontal: 10,
               alignSelf: 'center',
             }}></View>
+          <Text
+            style={{color: 'red', fontSize: fontSizes.h6, marginBottom: 15}}>
+            {errorEmail}
+          </Text>
         </View>
         <View style={{marginHorizontal: 15}}>
           <Text style={{color: colors.primary, fontSize: fontSizes.h6}}>
             Password:{' '}
           </Text>
           <TextInput
+            onChangeText={password => {
+              setErrorPassword(
+                isValidPassword(password) == true
+                  ? ''
+                  : 'Password must be at least 3 characters',
+              );
+              setPassword(password);
+            }}
             style={{
               color: 'black',
             }}
@@ -96,6 +130,10 @@ function Login(props) {
               marginHorizontal: 10,
               alignSelf: 'center',
             }}></View>
+          <Text
+            style={{color: 'red', fontSize: fontSizes.h6, marginBottom: 15}}>
+            {errorPassword}
+          </Text>
         </View>
       </View>
       <View
@@ -103,11 +141,14 @@ function Login(props) {
           flex: 15,
         }}>
         <TouchableOpacity
+          disabled={isValidationOK() == false}
           onPress={() => {
-            alert('press login');
+            alert(`email: ${email}, pass: ${password}`);
           }}
           style={{
-            backgroundColor: colors.primary,
+            backgroundColor: isValidationOK()
+              ? colors.primary
+              : colors.inactive,
             justifyContent: 'center',
             alignItems: 'center',
             width: '50%',
