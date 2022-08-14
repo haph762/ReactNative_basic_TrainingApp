@@ -12,7 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 // import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // import {StackRouter} from 'react-navigation';
-import {Welcome, Login, Register} from '../screens';
+import {Welcome, Login, Register, FoodList} from '../screens';
 /**
  - Call API(Application Programming Interface)
  - POST, GET, PUT, DELETE
@@ -38,9 +38,10 @@ function App(props) {
         }}>
         {/* <Stack.Screen name={'Welcome'} component={Welcome} /> */}
         {/* <Stack.Screen name={'Login'} component={Login} /> */}
-        <Stack.Screen name={'Register'} component={Register} />
+        {/* <Stack.Screen name={'Register'} component={Register} /> */}
         {/* <Stack.Screen name={'UITab'} component={UITab} /> */}
         {/* <Stack.Screen name={'Messenger'} component={Messenger} /> */}
+        <Stack.Screen name={'Foodlist'} component={FoodList} />
       </Stack.Navigator>
     </NavigationContainer>
   );
