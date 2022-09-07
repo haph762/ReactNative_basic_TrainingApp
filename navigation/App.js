@@ -32,6 +32,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+import UITab from './UITab';
 
 const Stack = createNativeStackNavigator();
 // import UITab from './UITab';
@@ -43,14 +44,10 @@ function App(props) {
         screenOptions={{
           headerShown: false,
         }}>
-        {/* <Stack.Screen name={'Welcome'} component={Welcome} /> */}
-        {/* <Stack.Screen name={'Login'} component={Login} /> */}
-        {/* <Stack.Screen name={'Register'} component={Register} /> */}
-        {/* <Stack.Screen name={'UITab'} component={UITab} /> */}
-        {/* <Stack.Screen name={'Messenger'} component={Messenger} /> */}
-        {/* <Stack.Screen name={'Foodlist'} component={FoodList} /> */}
-        {/* <Stack.Screen name={'ProductGirdView'} component={ProductGirdView} /> */}
-        <Stack.Screen name={'Setting'} component={Settings} />
+        <Stack.Screen name={'Welcome'} component={Welcome} />
+        <Stack.Screen name={'Login'} component={Login} />
+        <Stack.Screen name={'Register'} component={Register} />
+        <Stack.Screen name={'UITab'} component={UITab} />
       </Stack.Navigator>
     </NavigationContainer>
   );

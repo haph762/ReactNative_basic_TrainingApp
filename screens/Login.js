@@ -17,8 +17,8 @@ function Login(props) {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   //sate to store email/password
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('phan@gmail.com');
+  const [password, setPassword] = useState('12345678');
   // disable button login
   const isValidationOK = () => {
     return (
@@ -37,6 +37,10 @@ function Login(props) {
       setKeyboardIsShow(false);
     });
   });
+  //navigation
+  const {navigation, route} = props;
+  //function of navigate to/back
+  const {navigate, goBack} = navigation;
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -75,6 +79,7 @@ function Login(props) {
             Email:{' '}
           </Text>
           <TextInput
+            value={email}
             onChangeText={text => {
               setErrorEmail(
                 isValidEmail(text) == true ? '' : 'Email not in correct format',
@@ -106,6 +111,7 @@ function Login(props) {
             Password:{' '}
           </Text>
           <TextInput
+            value={password}
             onChangeText={password => {
               setErrorPassword(
                 isValidPassword(password) == true
@@ -143,7 +149,8 @@ function Login(props) {
         <TouchableOpacity
           disabled={isValidationOK() == false}
           onPress={() => {
-            alert(`email: ${email}, pass: ${password}`);
+            // alert(`email: ${email}, pass: ${password}`);
+            navigate('UITab');
           }}
           style={{
             backgroundColor: isValidationOK()
