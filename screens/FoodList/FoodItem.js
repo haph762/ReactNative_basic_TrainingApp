@@ -22,7 +22,6 @@ function FoodItem(props) {
   const {onPressName} = props; // gọi hàm onPress duoc truyền vào
   //   let {twitter, facebook, instagram} = socialNetworks;
   // có thể destructuring để lấy ra các dối tượng trong mảng như này và check các icon
-  debugger;
   return (
     <TouchableOpacity onPress={onPressName}>
       <View

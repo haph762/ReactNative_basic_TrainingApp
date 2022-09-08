@@ -6,6 +6,7 @@ import {
   FoodList,
   ProductGirdView,
   Settings,
+  Profile,
 } from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {images, color, fontSizes, icons, colors} from '../constants';
@@ -22,6 +23,7 @@ const screenOptions = ({route}) => ({
     let iconCurrent = 'cog';
     if (route.name === 'FoodList') iconCurrent = 'sliders-h';
     else if (route.name === 'ProductionGridView') iconCurrent = 'pizza-slice';
+    else if (route.name === 'Profile') iconCurrent = 'users-cog';
     return <Icon name={`${iconCurrent}`} color={color} size={size} />;
   },
   tabBarBackground: () => {
@@ -57,6 +59,16 @@ const UITab = props => {
         component={Settings}
         options={{
           tabBarLabel: 'Settings',
+          tabBarLabelStyle: {
+            fontSize: fontSizes.h6,
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
           tabBarLabelStyle: {
             fontSize: fontSizes.h6,
           },

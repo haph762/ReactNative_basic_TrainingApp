@@ -4,4 +4,5 @@ import Register from './Register';
 import FoodList from './FoodList/FoodList';
 import ProductGirdView from './ProductGird/ProductGirdView';
 import Settings from './Settings';
-export {Welcome, Login, Register, FoodList, ProductGirdView, Settings};
+import Profile from './Profile';
+export {Welcome, Login, Register, FoodList, ProductGirdView, Settings, Profile};
