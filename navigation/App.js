@@ -19,6 +19,7 @@ import {
   FoodList,
   ProductGirdView,
   Settings,
+  Messenger,
 } from '../screens';
 /**
  - Call API(Application Programming Interface)
@@ -48,6 +49,7 @@ function App(props) {
         <Stack.Screen name={'Login'} component={Login} />
         <Stack.Screen name={'Register'} component={Register} /> */}
         <Stack.Screen name={'UITab'} component={UITab} />
+        <Stack.Screen name={'Messenger'} component={Messenger} />
       </Stack.Navigator>
     </NavigationContainer>
   );

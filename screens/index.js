@@ -5,4 +5,17 @@ import FoodList from './FoodList/FoodList';
 import ProductGirdView from './ProductGird/ProductGirdView';
 import Settings from './Settings';
 import Profile from './Profile';
-export {Welcome, Login, Register, FoodList, ProductGirdView, Settings, Profile};
+import Chat from './Chat/Chat';
+import Messenger from './Messenger/Messenger';
+
+export {
+  Welcome,
+  Login,
+  Register,
+  FoodList,
+  ProductGirdView,
+  Settings,
+  Profile,
+  Chat,
+  Messenger,
+};

@@ -7,6 +7,7 @@ import {
   ProductGirdView,
   Settings,
   Profile,
+  Chat,
 } from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {images, color, fontSizes, icons, colors} from '../constants';
@@ -24,6 +25,7 @@ const screenOptions = ({route}) => ({
     if (route.name === 'FoodList') iconCurrent = 'sliders-h';
     else if (route.name === 'ProductionGridView') iconCurrent = 'pizza-slice';
     else if (route.name === 'Profile') iconCurrent = 'users-cog';
+    else if (route.name === 'Chat') iconCurrent = 'comment-dots';
     return <Icon name={`${iconCurrent}`} color={color} size={size} />;
   },
   tabBarBackground: () => {
@@ -39,6 +41,16 @@ const UITab = props => {
         component={FoodList}
         options={{
           tabBarLabel: 'Lists',
+          tabBarLabelStyle: {
+            fontSize: fontSizes.h6,
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          tabBarLabel: 'Chat',
           tabBarLabelStyle: {
             fontSize: fontSizes.h6,
           },
