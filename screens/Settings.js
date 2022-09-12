@@ -14,11 +14,21 @@ import {images, color, fontSizes, icons, colors} from '../constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {isValidEmail, isValidPassword} from '../utilities/Validations';
 import {UIHeader} from '../components';
+import {
+  auth,
+  firebaseDatabase,
+  firebaseDatabaseRef,
+} from '../firebase/firebase';
+import {StackActions} from '@react-navigation/native';
 
-const Settings = () => {
+const Settings = props => {
   const [isEnableLockApp, setIsEnableLockApp] = useState(true);
   const [isUseFingerprint, setIsUseFingerprint] = useState(false);
   const [isEnabledChangePassword, setIsEnabledChangePassword] = useState(true);
+  //navigation
+  const {navigation, route} = props;
+  //functions of navigate to/back
+  const {navigate, goBack} = navigation;
   return (
     <View style={{flex: 1}}>
       <UIHeader title={'Settings'} />
@@ -186,11 +196,15 @@ const Settings = () => {
           />
         </View>
         {/* sing out */}
-        <View
+        <TouchableOpacity
           style={{
             flexDirection: 'row',
             paddingVertical: 10,
             alignItems: 'center',
+          }}
+          onPress={() => {
+            auth.signOut();
+            navigation.dispatch(StackActions.popToTop());
           }}>
           <Icon
             name="sign-out-alt"
@@ -214,7 +228,7 @@ const Settings = () => {
               opacity: 0.6,
             }}
           />
-        </View>
+        </TouchableOpacity>
         {/* ________ Menu security */}
         <View
           style={{

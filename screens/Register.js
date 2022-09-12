@@ -5,13 +5,17 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  KeyboardAvoidingView,
   Keyboard,
 } from 'react-native';
 import {images, color, fontSizes, icons, colors} from '../constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {isValidEmail, isValidPassword} from '../utilities/Validations';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {
+  auth,
+  firebaseDatabase,
+  createUserWithEmailAndPassword,
+} from '../firebase/firebase';
 function Register(props) {
   const [keyboardIsShow, setKeyboardIsShow] = useState(false);
   //sate for validating
@@ -19,15 +23,17 @@ function Register(props) {
   const [errorPassword, setErrorPassword] = useState('');
   const [reErrorPassword, setReErrorPassword] = useState('');
   //sate to store email/password
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('phanha@gmail.com');
+  const [password, setPassword] = useState('123456');
+  const [retypePassword, setRetypePassword] = useState('123456');
   // disable button login
   const isValidationOK = () => {
     return (
       email.length > 0 &&
       password.length > 0 &&
       isValidEmail(email) &&
-      isValidPassword(password)
+      isValidPassword(password) &&
+      password === retypePassword
     );
   };
   useEffect(() => {
@@ -92,6 +98,7 @@ function Register(props) {
             }}
             placeholder="Example@gmail.com"
             placeholderTextColor={colors.placeholder}
+            value={email}
           />
           <View
             style={{
@@ -126,6 +133,7 @@ function Register(props) {
             placeholder="Password"
             placeholderTextColor={colors.placeholder}
             secureTextEntry={true}
+            value={password}
           />
           <View
             style={{
@@ -152,7 +160,7 @@ function Register(props) {
                   ? ''
                   : 'Password must be at least 3 characters',
               );
-              setPassword(password);
+              setRetypePassword(password);
             }}
             style={{
               color: 'black',
@@ -160,6 +168,7 @@ function Register(props) {
             placeholder="Retype Enter Password"
             placeholderTextColor={colors.placeholder}
             secureTextEntry={true}
+            value={retypePassword}
           />
           <View
             style={{
@@ -177,7 +186,14 @@ function Register(props) {
         <TouchableOpacity
           disabled={isValidationOK() == false}
           onPress={() => {
-            alert(`email: ${email}, pass: ${password}`);
+            // alert(`email: ${email}, pass: ${password}`);
+            createUserWithEmailAndPassword(auth, email, password)
+              .then(userCredential => {
+                const user = userCredential.user;
+              })
+              .catch(err => {
+                alert(`cannot sign, error: ${err} `);
+              });
           }}
           style={{
             backgroundColor: isValidationOK()

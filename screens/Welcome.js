@@ -15,13 +15,13 @@ import {UIButton} from '../components';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// import {
-//   auth,
-//   onAuthStateChanged,
-//   firebaseDatabaseRef,
-//   firebaseSet,
-//   firebaseDatabase,
-// } from '../firebase/firebase';
+import {
+  auth,
+  onAuthStateChanged,
+  firebaseDatabaseRef,
+  firebaseSet,
+  firebaseDatabase,
+} from '../firebase/firebase';
 function Welcome(props) {
   //state => when a state is changed => UI is reloaded
   //like getter/setter
@@ -43,27 +43,26 @@ function Welcome(props) {
   const {navigation, route} = props;
   //functions of navigate to/back
   const {navigate, goBack} = navigation;
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, responseUser => {
-  //     debugger;
-  //     if (responseUser) {
-  //       //save data to Firebase
-  //       let user = {
-  //         userId: responseUser.uid,
-  //         email: responseUser.email,
-  //         emailVerified: responseUser.emailVerified,
-  //         accessToken: responseUser.accessToken,
-  //       };
-  //       firebaseSet(
-  //         firebaseDatabaseRef(firebaseDatabase, `users/${responseUser.uid}`),
-  //         user,
-  //       );
-  //       //save user to local storage
-  //       AsyncStorage.setItem('user', JSON.stringify(user));
-  //       navigate('UITab');
-  //     }
-  //   });
-  // });
+  useEffect(() => {
+    onAuthStateChanged(auth, responseUser => {
+      if (responseUser) {
+        //save data to Firebase
+        let user = {
+          userId: responseUser.uid,
+          email: responseUser.email,
+          emailVerified: responseUser.emailVerified,
+          accessToken: responseUser.accessToken,
+        };
+        firebaseSet(
+          firebaseDatabaseRef(firebaseDatabase, `users/${responseUser.uid}`),
+          user,
+        );
+        // //save user to local storage
+        // AsyncStorage.setItem('user', JSON.stringify(user));
+        navigate('UITab');
+      }
+    });
+  });
   return (
     <View
       style={{
