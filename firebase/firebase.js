@@ -3,11 +3,16 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
 import {
   getDatabase,
   ref as firebaseDatabaseRef,
   set as firebaseSet,
+  child,
+  get,
+  onValue,
 } from 'firebase/database';
 const firebaseConfig = {
   apiKey: 'AIzaSyDs2p-74ZCmF0qAATj9Mr-MOiHaKci1g7Q',
@@ -31,4 +36,9 @@ export {
   createUserWithEmailAndPassword,
   firebaseDatabaseRef,
   firebaseSet,
+  sendEmailVerification,
+  child,
+  get,
+  onValue, ///realtime
+  signInWithEmailAndPassword,
 };

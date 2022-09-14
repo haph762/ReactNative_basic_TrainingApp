@@ -14,11 +14,19 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {isValidEmail, isValidPassword} from '../utilities/Validations';
 import {UIHeader} from '../../components';
 import MessengerItem from './MessengerItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  firebaseDatabase,
+  firebaseDatabaseRef,
+  firebaseSet,
+  onValue,
+} from '../../firebase/firebase';
 
 const Messenger = props => {
   const {navigation, route} = props;
   const {navigate, goBack} = navigation;
-  let {name, url, ...tmp} = props.route.params.user;
+  let {name, url, userId, ...tmp} = props.route.params.user;
+  const [typeText, setTypeText] = useState('');
   const [chatHistory, setChatHistory] = useState([
     {
       url: 'https://randomuser.me/api/portraits/men/38.jpg',
@@ -27,39 +35,42 @@ const Messenger = props => {
       messenger: 'hello',
       timestamp: 1662900811,
     },
-    {
-      url: 'https://randomuser.me/api/portraits/men/83.jpg',
-      showUrl: true,
-      isSender: false,
-      messenger: 'how are you',
-      timestamp: 1662900875,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/men/83.jpg',
-      showUrl: false,
-      isSender: false,
-      messenger: 'hello 2 bạn nhé, ban là ai thế',
-      timestamp: 1662900831,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/men/38.jpg',
-      showUrl: true,
-      isSender: true,
-      messenger:
-        'how about your work bye bye tam biet ban nhe, mai minh phai di la nen ngủ sớm nè',
-      timestamp: 1662900711,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/men/83.jpg',
-      showUrl: true,
-      isSender: false,
-      messenger:
-        'bye bye tam biet ban nhe, mai minh phai di la nen ngủ sớm nè ',
-      timestamp: 1662900819,
-    },
   ]);
+  useEffect(() => {
+    const unsubscribe = onValue(
+      firebaseDatabaseRef(firebaseDatabase, 'chats'),
+      async snapshot => {
+        if (snapshot.exists()) {
+          let snapshotObj = snapshot.val();
+          let stringUser = await AsyncStorage.getItem('user');
+          let myUserId = JSON.parse(stringUser).userId;
+          let chatHistoryTmp = Object.keys(snapshotObj)
+            .filter(item => item.includes(myUserId))
+            .map(itemKey => {
+              return {
+                ...snapshotObj[itemKey],
+                isSender: itemKey.split('-')[0] == myUserId,
+                url: 'https://randomuser.me/api/portraits/men/38.jpg',
+              };
+            })
+            .sort((item1, item2) => item1.timestamp - item2.timestamp);
+          for (let i = 0; i < chatHistoryTmp.length; i++) {
+            let item = chatHistoryTmp[i];
+            item.showUrl =
+              i == 0 ? true : item.isSender != chatHistoryTmp[i].isSender;
+          }
+          setChatHistory(chatHistoryTmp);
+        } else {
+          console.log('no data');
+        }
+      },
+    );
+    return () => {
+      unsubscribe;
+    };
+  }, []);
   return (
-    <View style={{flexDirection: 'column'}}>
+    <View style={{flexDirection: 'column', flex: 1}}>
       <UIHeader
         title={name}
         leftIconName={'arrow-left'}
@@ -70,28 +81,8 @@ const Messenger = props => {
         onPressRightIcon={() => {
           alert('right');
         }}></UIHeader>
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingStart: 10,
-        }}>
-        <Text style={{color: 'black', fontSize: fontSizes.h6, marginStart: 10}}>
-          6 unread messengers
-        </Text>
-        <Icon
-          name={'trash-alt'}
-          style={{padding: 10}}
-          size={12}
-          color={colors.inactive}
-          onPress={() => {
-            alert('deleted');
-          }}
-        />
-      </View> */}
       <FlatList
-        style={{}}
+        style={{flex: 1}}
         data={chatHistory}
         renderItem={({item}) => {
           return (
@@ -105,6 +96,61 @@ const Messenger = props => {
           );
         }}
       />
+      <View
+        style={{
+          height: 50,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <TextInput
+          value={typeText}
+          onChangeText={typeText => {
+            setTypeText(typeText);
+          }}
+          style={{
+            color: 'black',
+            paddingStart: 10,
+          }}
+          placeholder="Enter your message here"
+          placeholderTextColor={colors.placeholder}
+        />
+        <TouchableOpacity
+          onPress={async () => {
+            if (typeText.length == 0) {
+              return;
+            }
+            let stringUser = await AsyncStorage.getItem('user');
+            let myUserId = JSON.parse(stringUser).userId;
+            let myFriendUserId = props.route.params.user.userId;
+            let newMessengerObject = {
+              url: 'https://randomuser.me/api/portraits/men/38.jpg',
+              showUrl: false,
+              messenger: typeText,
+              timestamp: new Date().getTime(),
+            };
+            Keyboard.dismiss();
+            firebaseSet(
+              firebaseDatabaseRef(
+                firebaseDatabase,
+                `chats/${myUserId}-${myFriendUserId}`,
+              ),
+              newMessengerObject,
+            ).then(() => {
+              setTypeText('');
+            });
+          }}>
+          <Icon
+            name="paper-plane"
+            style={{padding: 10}}
+            size={25}
+            color={colors.primary}></Icon>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

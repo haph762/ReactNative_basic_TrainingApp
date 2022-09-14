@@ -13,7 +13,6 @@ import {sum2Number, substract2Number, PI} from '../utilities/Calculation';
 import {images, icons, colors, fontSizes} from '../constants';
 import {UIButton} from '../components';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   auth,
@@ -22,6 +21,7 @@ import {
   firebaseSet,
   firebaseDatabase,
 } from '../firebase/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 function Welcome(props) {
   //state => when a state is changed => UI is reloaded
   //like getter/setter
@@ -58,7 +58,7 @@ function Welcome(props) {
           user,
         );
         // //save user to local storage
-        // AsyncStorage.setItem('user', JSON.stringify(user));
+        AsyncStorage.setItem('user', JSON.stringify(user));
         navigate('UITab');
       }
     });

@@ -12,7 +12,7 @@ import {images, color, fontSizes, icons, colors} from '../../constants/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 function ChatItem(props) {
-  let {name, url, messenger, numberOfUnreadMessenger} = props.user; // destructuring an object
+  let {name, url, messenger, userId, numberOfUnreadMessenger} = props.user; // destructuring an object
   const {onPressName} = props;
   return (
     <TouchableOpacity onPress={onPressName}>

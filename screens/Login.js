@@ -11,14 +11,23 @@ import {
 import {images, color, fontSizes, icons, colors} from '../constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {isValidEmail, isValidPassword} from '../utilities/Validations';
+import {
+  auth,
+  onAuthStateChanged,
+  firebaseDatabaseRef,
+  firebaseSet,
+  firebaseDatabase,
+  signInWithEmailAndPassword,
+} from '../firebase/firebase';
+
 function Login(props) {
   const [keyboardIsShow, setKeyboardIsShow] = useState(false);
   //sate for validating
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   //sate to store email/password
-  const [email, setEmail] = useState('phan@gmail.com');
-  const [password, setPassword] = useState('12345678');
+  const [email, setEmail] = useState('phanha6@gmail.com');
+  const [password, setPassword] = useState('123456');
   // disable button login
   const isValidationOK = () => {
     return (
@@ -89,6 +98,7 @@ function Login(props) {
             style={{
               color: 'black',
             }}
+            keyboardType="email-address"
             placeholder="Example@gmail.com"
             placeholderTextColor={colors.placeholder}
           />
@@ -150,7 +160,15 @@ function Login(props) {
           disabled={isValidationOK() == false}
           onPress={() => {
             // alert(`email: ${email}, pass: ${password}`);
-            navigate('UITab');
+            // alert(`email: ${email}, pass: ${password}`);
+            signInWithEmailAndPassword(auth, email, password)
+              .then(userCredential => {
+                const user = userCredential.user;
+                navigate('UITab');
+              })
+              .catch(err => {
+                alert(`cannot sign, error: ${err} `);
+              });
           }}
           style={{
             backgroundColor: isValidationOK()

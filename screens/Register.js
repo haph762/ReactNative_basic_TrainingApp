@@ -15,6 +15,7 @@ import {
   auth,
   firebaseDatabase,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
 } from '../firebase/firebase';
 function Register(props) {
   const [keyboardIsShow, setKeyboardIsShow] = useState(false);
@@ -190,6 +191,10 @@ function Register(props) {
             createUserWithEmailAndPassword(auth, email, password)
               .then(userCredential => {
                 const user = userCredential.user;
+                sendEmailVerification(user).then(() => {
+                  console.log('email verification send');
+                });
+                navigate('UITab');
               })
               .catch(err => {
                 alert(`cannot sign, error: ${err} `);

@@ -14,46 +14,55 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {isValidEmail, isValidPassword} from '../utilities/Validations';
 import {UIHeader} from '../../components';
 import ChatItem from './ChatItem';
+import {
+  auth,
+  firebaseDatabase,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  child,
+  get,
+  firebaseDatabaseRef,
+  onValue,
+} from '../../firebase/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Chat = props => {
   const {navigation, route} = props;
   const {navigate, goBack} = navigation;
+  useEffect(() => {
+    onValue(firebaseDatabaseRef(firebaseDatabase, 'users'), async snapshot => {
+      if (snapshot.exists()) {
+        let snapshotObj = snapshot.val();
+        let stringUser = await AsyncStorage.getItem('user');
+        let myUserId = JSON.parse(stringUser).userId;
+        setUsers(
+          Object.keys(snapshotObj)
+            .filter(key => key !== myUserId)
+            .map(itemKey => {
+              let item = snapshotObj[itemKey];
+              return {
+                //url default profile
+                url: 'https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png',
+                name: item['email'],
+                email: item.email,
+                accessToken: item.accessToken,
+                numberOfUnreadMessenger: 3,
+                userId: itemKey,
+              };
+            }),
+        );
+      } else {
+        console.log('no data');
+      }
+    });
+  }, []);
   const [users, setUsers] = useState([
-    {
-      url: 'https://randomuser.me/api/portraits/women/23.jpg',
-      name: 'phan ha',
-      messenger: 'hello hà đây',
-      numberOfUnreadMessenger: 2,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/women/13.jpg',
-      name: 'thanh Phong',
-      messenger: 'hello hà hihi đây',
-      numberOfUnreadMessenger: 12,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/women/22.jpg',
-      name: 'BNguyen tuan',
-      messenger: 'hello lai là hà đây',
-      numberOfUnreadMessenger: 0,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/women/43.jpg',
-      name: 'pham ha',
-      messenger: 'hello hà... tui đây',
-      numberOfUnreadMessenger: 2,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/women/63.jpg',
-      name: 'phan ha Nguyen',
-      messenger: 'hello hà đây lan72 cuối',
-      numberOfUnreadMessenger: 15,
-    },
-    {
-      url: 'https://randomuser.me/api/portraits/women/73.jpg',
-      name: 'phan ha Nguyen',
-      messenger: 'hello hà đây lan72 cuối',
-    },
+    // {
+    //   url: 'https://randomuser.me/api/portraits/women/23.jpg',
+    //   name: 'phan ha',
+    //   messenger: 'hello hà đây',
+    //   numberOfUnreadMessenger: 2,
+    // }
   ]);
   return (
     <View style={{flexDirection: 'column'}}>
@@ -88,7 +97,7 @@ const Chat = props => {
         />
       </View>
       <FlatList
-        style={{}}
+        style={{marginBottom: 90}}
         data={users}
         renderItem={({item}) => {
           return (
